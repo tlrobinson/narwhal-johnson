@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'johnson'
+
+bootstrap = File.join(ENV['NARWHAL_PLATFORM_HOME'], 'bootstrap.js')
+Johnson.evaluate(File.read(bootstrap))
