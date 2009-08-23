@@ -1,4 +1,8 @@
 {
     "name": "narwhal-johnson",
-    "engine": "johnson"
+    "dependencies": ["narwhal"],
+    "engine": "johnson",
+    "author": "Tom Robinson (http://tlrobinson.net/)",
+    "description": "Johnson (Ruby-JavaScript bridge, using SpiderMonkey) engine support for Narwhal",
+    "keywords": ["narwhal", "engine", "johnson", "ruby", "spidermonkey", "mozilla"]
 }
