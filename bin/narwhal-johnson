@@ -2,5 +2,7 @@
 
 require 'johnson'
 
+ENV['NARWHAL_PLATFORM_HOME'] ||= File.dirname(File.dirname($0))
+
 bootstrap = File.join(ENV['NARWHAL_PLATFORM_HOME'], 'bootstrap.js')
 Johnson.evaluate(File.read(bootstrap))

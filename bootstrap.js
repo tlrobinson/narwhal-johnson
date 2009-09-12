@@ -1,42 +1,49 @@
-(function (evalGlobal) {
+(function (global, evalGlobal) {
 
-    var _print = function(path) {
+    var print = function(path) {
         Ruby.puts(path);
     };
 
-    var _read = function(path) {
+    var read = function(path) {
         return Ruby.File.read(path);
     };
 
-    var _isFile = function(path) {
+    var isFile = function(path) {
         return Ruby.File['file?'](path);
     };
     
+    var evaluate = function (text) {
+        // TODO maybe something better here:
+        return eval(
+            "(function(require,exports,module,system,print){" +
+            text +
+            "/**/\n})"
+        );
+    }
+    
     var prefix = Ruby.ENV['NARWHAL_HOME'];
+    var enginePrefix = Ruby.ENV['NARWHAL_ENGINE_HOME'];
 
-    eval(_read(prefix + "/narwhal.js"))({
-        global: this,
+    var narwhal = eval(read(prefix + "/narwhal.js"))
+
+    narwhal({
+        global: global,
         evalGlobal: evalGlobal,
-        platform: 'johnson',
-        platforms: ['johnson', 'default'],
-        print: _print,
-        evaluate: function (text) {
-            // TODO maybe something better here:
-            return eval(
-                "(function(require,exports,module,system,print){" +
-                text +
-                "/**/\n})"
-            );
-        },
-        fs: {
-            read: _read,
-            isFile: _isFile
-        },
+        engine: 'johnson',
+        engines: ['johnson', 'default'],
         prefix: prefix,
-        debug: true,
-        verbose: true
+        prefixes: [enginePrefix, prefix],
+        print: print,
+        fs: {
+            read: read,
+            isFile: isFile
+        },
+        evaluate: evaluate,
+        os : Ruby.RUBY_PLATFORM,
+        debug: Ruby.ENV['NARWHAL_DEBUG'],
+        verbose: Ruby.ENV['NARWHAL_VERBOSE']
     });
 
-}).call(this, function () {
+})(this, function () {
     return eval(arguments[0]);
 });
